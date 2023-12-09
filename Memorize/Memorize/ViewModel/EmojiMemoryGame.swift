@@ -20,11 +20,15 @@ class EmojiMemoryGame: ObservableObject {
             }
         }
     }
-        
+    
     @Published private var model = createMemoryGame()
     
     var cards: Array<Card> {
         return model.cards
+    }
+    
+    var color: Color {
+        .orange
     }
     
     // MARK: - Intents
