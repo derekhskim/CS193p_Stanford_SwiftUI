@@ -26,6 +26,8 @@ struct CardView: View {
                     .multilineTextAlignment(.center)
                     .aspectRatio(1, contentMode: .fit)
                     .padding(Constants.Pie.inset)
+                    .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+                    .animation(.spin(duration: 1), value: card.isMatched)
             )
             .padding(Constants.inset)
             .cardify(isFaceUp: card.isFaceUp)
@@ -48,6 +50,12 @@ struct CardView: View {
     }
 }
 
+extension Animation {
+    static func spin(duration: TimeInterval) -> Animation {
+        .linear(duration: 1).repeatForever(autoreverses: false)
+    }
+}
+
 struct CardView_Previews: PreviewProvider {
     typealias Card = CardView.Card
     
@@ -64,11 +72,5 @@ struct CardView_Previews: PreviewProvider {
         }
         .padding()
         .foregroundStyle(.green)
-    }
-}
-
-extension View {
-    func cardify(isFaceUp: Bool) -> some View {
-        modifier(Cardify(isFaceUp: isFaceUp))
     }
 }
