@@ -46,6 +46,7 @@ struct EmojiMemoryGameView: View {
             CardView(card)
                 .padding(spacing)
                 .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
+                .zIndex(scoreChange(causedBy: card) != 0 ? 1 : 0)
                 .onTapGesture {
                     withAnimation {
                         let scoreBeforeChoosing = viewModel.score
