@@ -10,7 +10,7 @@ import SwiftUI
 struct FlyingNumber: View {
     let number: Int
     
-    @State private var offset: CGFloat = -50
+    @State private var offset: CGFloat = 0
     
     var body: some View {
         if number != 0 {
