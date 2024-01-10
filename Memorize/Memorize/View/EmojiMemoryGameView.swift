@@ -11,12 +11,6 @@ struct EmojiMemoryGameView: View {
     typealias Card = MemoryGame<String>.Card
     @ObservedObject var viewModel: EmojiMemoryGame
     
-    private let aspectRatio: CGFloat = 2/3
-    private let spacing: CGFloat = 4
-    private let dealAnimation: Animation = .easeInOut(duration: 1)
-    private let dealInterval: TimeInterval = 0.15
-    private let deckWidth: CGFloat = 50
-    
     var body: some View {
         VStack{
             cards
@@ -47,12 +41,12 @@ struct EmojiMemoryGameView: View {
     }
     
     private var cards: some View {
-        AspectVGrid(viewModel.cards, aspectRatio: aspectRatio) { card in
+        AspectVGrid(viewModel.cards, aspectRatio: Constants.aspectRatio) { card in
             if isDealt(card) {
                 CardView(card)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
-                    .padding(spacing)
+                    .padding(Constants.spacing)
                     .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
                     .zIndex(scoreChange(causedBy: card) != 0 ? 1 : 0)
                     .onTapGesture {
@@ -83,7 +77,7 @@ struct EmojiMemoryGameView: View {
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
             }
         }
-        .frame(width: deckWidth, height: deckWidth / aspectRatio)
+        .frame(width: Constants.deckWidth, height: Constants.deckWidth / Constants.aspectRatio)
         .onTapGesture {
             deal()
         }
@@ -92,10 +86,10 @@ struct EmojiMemoryGameView: View {
     private func deal() {
         var delay: TimeInterval = 0
         for card in viewModel.cards {
-            withAnimation(dealAnimation.delay(delay)) {
+            withAnimation(Constants.Animation.dealAnimation.delay(delay)) {
                 _ = dealt.insert(card.id)
             }
-            delay += dealInterval
+            delay += Constants.Animation.dealInterval
         }
     }
     
@@ -113,6 +107,16 @@ struct EmojiMemoryGameView: View {
     private func scoreChange(causedBy card: Card) -> Int {
         let (amount, id) = lastScoreChange
         return card.id == id ? amount : 0
+    }
+    
+    private struct Constants {
+        static let aspectRatio: CGFloat = 2/3
+        static let spacing: CGFloat = 4
+        static let deckWidth: CGFloat = 50
+        struct Animation {
+            static let dealAnimation: SwiftUI.Animation = .easeInOut(duration: 1)
+            static let dealInterval: TimeInterval = 0.15
+        }
     }
 }
 
